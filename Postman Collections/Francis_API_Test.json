@@ -68,21 +68,19 @@
 						"id": "79e2b176-9123-46f8-974e-f78f9e3378b4",
 						"exec": [
 							"pm.test(\"Verify status code\", () => {",
-							"    if (pm.response.code === 201){",
-							"        console.log(\"User created successfully\");",
+							"    if (pm.response.code === 400) {",
+							"        pm.expect(pm.response.code).to.eql(400);",
+							"        console.log(\"Test Passed - Bad Request\");",
 							"    } ",
-							"else if (pm.response.code === 400) {",
-							"        console.log(\"Error message:\", pm.response.json().message);",
-							"    } else { pm.expect.fail(`${pm.response.code}`)}",
+							"    else {",
+							"        pm.expect.fail(`Unexpected status code: ${pm.response.code}`);",
+							"    }",
 							"});",
 							"",
-							"pm.test(\"Verify a user_id is returned\", () => {",
+							"pm.test(\"Verify a user_id is not returned\", () => {",
 							"    let jsonData = pm.response.json();",
-							"    pm.expect(jsonData).to.have.property('id');",
-							"    pm.expect(jsonData.id).to.be.a('string');",
-							"    pm.collectionVariables.set('user_id', jsonData.id);",
-							"});",
-							""
+							"    pm.expect(jsonData).to.not.have.property('username');",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -101,7 +99,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"francis\",\r\n  \"email\": \"francis@lsq.li\",\r\n  \"password\": \"12345\"\r\n}",
+					"raw": "{\r\n  \"email\": \"francis@lsq.li\",\r\n  \"password\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
