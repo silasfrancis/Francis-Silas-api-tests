@@ -27,8 +27,7 @@
 							"    pm.expect(jsonData).to.have.property('id');",
 							"    pm.expect(jsonData.id).to.be.a('string');",
 							"    pm.collectionVariables.set('user_id', jsonData.id);",
-							"});",
-							""
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
