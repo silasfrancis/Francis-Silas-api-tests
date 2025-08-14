@@ -282,6 +282,83 @@
 			"response": []
 		},
 		{
+			"name": "Update User - Invalid UserID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
+						"exec": [
+							"pm.test(\"Verify user details have been updated\", () => {\r",
+							"    let jsonData = pm.response.json();\r",
+							"\r",
+							"    const firstName = pm.collectionVariables.get(\"first_name\");\r",
+							"    const lastName = pm.collectionVariables.get(\"last_name\");\r",
+							"    const email = pm.collectionVariables.get(\"email\");\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('username');\r",
+							"    pm.expect(jsonData.username).to.eql(`${firstName} ${lastName}`);\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('email');\r",
+							"    pm.expect(jsonData.email).to.eql(email);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b53caf29-cc95-4383-9df9-e630d39c6513",
+						"exec": [
+							"const firstNames = [\"Michael\", \"Lindsay\", \"Tobias\", \"Byron\", \"George\", \"Rachel\", \"Sophia\", \"David\", \"Emma\", \"Liam\"];\r",
+							"const lastNames = [\"Lawson\", \"Ferguson\", \"Funke\", \"Fields\", \"Edwards\", \"Howell\", \"Johnson\", \"Brown\", \"Wilson\", \"Taylor\"];\r",
+							"\r",
+							"const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];\r",
+							"const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+							"\r",
+							"const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 1000)}@example.com`;\r",
+							"\r",
+							"pm.collectionVariables.set(\"first_name\", firstName);\r",
+							"pm.collectionVariables.set(\"last_name\", lastName);\r",
+							"pm.collectionVariables.set(\"email\", email);\r",
+							"\r",
+							"console.log(\"Generated:\", { firstName, lastName, email });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "07295682-ea14-4f53-ad7f-349613febe8f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"username\": \"{{first_name}} {{last_name}}\",\r\n  \"email\": \"{{email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}users/{{user_id}}",
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		},
+		{
 			"name": "Delete User",
 			"event": [
 				{
