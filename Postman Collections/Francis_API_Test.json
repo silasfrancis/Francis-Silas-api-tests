@@ -1,0 +1,320 @@
+{
+	"info": {
+		"_postman_id": "14d26134-f597-475a-abfb-fd8fae183296",
+		"name": "Assurdly Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79e2b176-9123-46f8-974e-f78f9e3378b4",
+						"exec": [
+							"pm.test(\"Verify status code\", () => {",
+							"    if (pm.response.code === 201){",
+							"        console.log(\"User created successfully\");",
+							"    } ",
+							"else if (pm.response.code === 400) {",
+							"        console.log(\"Error message:\", pm.response.json().message);",
+							"    } else { pm.expect.fail(`${pm.response.code}`)}",
+							"});",
+							"",
+							"pm.test(\"Verify a user_id is returned\", () => {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData.id).to.be.a('string');",
+							"    pm.collectionVariables.set('user_id', jsonData.id);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "73a9874b-21a5-4f91-97ac-a1b045fb1d45",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"francis\",\r\n  \"email\": \"francis@lsq.li\",\r\n  \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}users",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
+						"exec": [
+							"pm.test(\"Verify and set user_id is returned\", () => {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('data');",
+							"    let userId = jsonData.data[0].id;",
+							"    console.log(\"User ID:\", userId);",
+							"    pm.collectionVariables.set('user_id', userId);",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "f297502f-83cb-4405-bcf7-35aa269af3d6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}users?page=2",
+					"host": [
+						"{{baseUrl}}users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				},
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
+						"exec": [
+							"pm.test(\"Verify a name is returned\", () => {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('data');",
+							"    pm.expect(jsonData.data).to.have.property('first_name');",
+							"    pm.expect(jsonData.data).to.have.property('last_name');",
+							"    pm.expect(jsonData.data).to.have.property('email');",
+							"",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "f6404eab-5e85-4d40-b650-a2c6e10af7a0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"url": "{{baseUrl}}users/{{user_id}}",
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
+						"exec": [
+							"pm.test(\"Verify user details have been updated\", () => {\r",
+							"    let jsonData = pm.response.json();\r",
+							"\r",
+							"    const firstName = pm.collectionVariables.get(\"first_name\");\r",
+							"    const lastName = pm.collectionVariables.get(\"last_name\");\r",
+							"    const email = pm.collectionVariables.get(\"email\");\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('username');\r",
+							"    pm.expect(jsonData.username).to.eql(`${firstName} ${lastName}`);\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property('email');\r",
+							"    pm.expect(jsonData.email).to.eql(email);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b53caf29-cc95-4383-9df9-e630d39c6513",
+						"exec": [
+							"const firstNames = [\"Michael\", \"Lindsay\", \"Tobias\", \"Byron\", \"George\", \"Rachel\", \"Sophia\", \"David\", \"Emma\", \"Liam\"];\r",
+							"const lastNames = [\"Lawson\", \"Ferguson\", \"Funke\", \"Fields\", \"Edwards\", \"Howell\", \"Johnson\", \"Brown\", \"Wilson\", \"Taylor\"];\r",
+							"\r",
+							"const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];\r",
+							"const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];\r",
+							"\r",
+							"const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 1000)}@example.com`;\r",
+							"\r",
+							"pm.collectionVariables.set(\"first_name\", firstName);\r",
+							"pm.collectionVariables.set(\"last_name\", lastName);\r",
+							"pm.collectionVariables.set(\"email\", email);\r",
+							"\r",
+							"console.log(\"Generated:\", { firstName, lastName, email });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "7da212f1-806f-48da-8db2-631ad380b336",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"username\": \"{{first_name}} {{last_name}}\",\r\n  \"email\": \"{{email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}users/{{user_id}}",
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
+						"exec": [
+							"pm.test(\"Verify status code\", () => {",
+							"    if (pm.response.code === 204){",
+							"        console.log(\"User deleted successfully\");",
+							"    } ",
+							"else if (pm.response.code === 400) {",
+							"        console.log(\"Error message:\", pm.response.json().message);",
+							"    } else { pm.expect.fail(`${pm.response.code}`)}",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "e3068cd9-4b96-4dbc-8391-9adcb399b074",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"url": "{{baseUrl}}users/{{user_id}}",
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7216eb2e-776c-4b02-9344-8fc65c613fdb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ffa340c7-634e-4c10-9342-2e00837d53fe",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "x-api-key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "first_name",
+			"value": ""
+		},
+		{
+			"key": "last_name",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		}
+	]
+}
