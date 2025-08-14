@@ -24,13 +24,12 @@ jobs:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
         run: |
           postman login --with-api-key $POSTMAN_API_KEY
-          postman collection run <collection_id> \
-            --environment <your-environment-id> \
+          postman collection run 34256241-14d26134-f597-475a-abfb-fd8fae183296 \
             --reporters cli,json \
             --reporter-json-export results.json
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: postman-results
           path: results.json
