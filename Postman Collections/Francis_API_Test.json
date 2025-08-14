@@ -272,7 +272,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "7216eb2e-776c-4b02-9344-8fc65c613fdb",
+				"id": "e70c8aba-d835-4e60-84ea-98c418a7efe8",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -282,7 +282,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "ffa340c7-634e-4c10-9342-2e00837d53fe",
+				"id": "df3d7cec-255c-4087-a4c0-5aa11b572ab9",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -293,28 +293,28 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": ""
+			"value": "https://reqres.in/api/"
 		},
 		{
 			"key": "x-api-key",
-			"value": "",
+			"value": "reqres-free-v1",
 			"type": "string"
 		},
 		{
 			"key": "user_id",
-			"value": ""
+			"value": "7"
 		},
 		{
 			"key": "first_name",
-			"value": ""
+			"value": "Byron"
 		},
 		{
 			"key": "last_name",
-			"value": ""
+			"value": "Ferguson"
 		},
 		{
 			"key": "email",
-			"value": ""
+			"value": "byron.ferguson25@example.com"
 		}
 	]
 }
