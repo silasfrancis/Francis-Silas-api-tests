@@ -287,18 +287,14 @@
 					"script": {
 						"id": "f29893da-81d5-43e0-9332-d6bb94e6cc38",
 						"exec": [
-							"pm.test(\"Verify user details have been updated\", () => {\r",
-							"    let jsonData = pm.response.json();\r",
-							"\r",
-							"    const firstName = pm.collectionVariables.get(\"first_name\");\r",
-							"    const lastName = pm.collectionVariables.get(\"last_name\");\r",
-							"    const email = pm.collectionVariables.get(\"email\");\r",
-							"\r",
-							"    pm.expect(jsonData).to.have.property('username');\r",
-							"    pm.expect(jsonData.username).to.eql(`${firstName} ${lastName}`);\r",
-							"\r",
-							"    pm.expect(jsonData).to.have.property('email');\r",
-							"    pm.expect(jsonData.email).to.eql(email);\r",
+							"pm.test(\"Verify status code\", () => {\r",
+							"    if (pm.response.code === 404) {\r",
+							"        pm.expect(pm.response.code).to.eql(400);\r",
+							"        console.log(\"Test Passed - User not found\");\r",
+							"    } \r",
+							"    else {\r",
+							"        pm.expect.fail(`Unexpected status code: ${pm.response.code}`);\r",
+							"    }\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -322,7 +318,20 @@
 							"pm.collectionVariables.set(\"last_name\", lastName);\r",
 							"pm.collectionVariables.set(\"email\", email);\r",
 							"\r",
-							"console.log(\"Generated:\", { firstName, lastName, email });"
+							"console.log(\"Generated:\", { firstName, lastName, email });\r",
+							"\r",
+							"function generateNumber() {\r",
+							"    let num;\r",
+							"    do {\r",
+							"        num = Math.floor(Math.random() * 100); \r",
+							"    } while (num >= 1 && num <= 13);\r",
+							"    return num;\r",
+							"}\r",
+							"\r",
+							"let randomNumber = generateNumber();\r",
+							"console.log(\"Generated number:\", randomNumber);\r",
+							"\r",
+							"pm.collectionVariables.set(\"randomNumber\", randomNumber);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -351,7 +360,7 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}users/{{user_id}}",
+				"url": "{{baseUrl}}users/{{randomNumber}}",
 				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
 			},
 			"response": []
