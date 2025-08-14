@@ -24,7 +24,7 @@ jobs:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
         run: |
           postman login --with-api-key $POSTMAN_API_KEY
-          postman collection run <COLLECTION_ID> \
+          postman collection run $COLLECTION_ID \
             --environment <your-environment-id> \
             --reporters cli,json \
             --reporter-json-export results.json
